@@ -145,7 +145,7 @@ impl UserService {
         Ok(data)
     }
 
-    /// Retrieve user by email
+    /// Retrieve user by (email)
     pub fn get_user_email(&self, email: &String) -> Result<Option<OrderedDocument>, Error> {
         self.collection.find_one(doc! { "email": email}, None)
     }
