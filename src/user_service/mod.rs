@@ -108,12 +108,12 @@ impl UserService {
         UserService { collection }
     }
 
-    /// Insert user in mongo db
+    /// Insert user in mongo db (user)
     pub fn create(&self, user: &User) -> Result<InsertOneResult, Error> {
         self.collection.insert_one(user_to_document(user), None)
     }
 
-    /// Update existing user in mongo db
+    /// Update existing user in mongo db (email)
     pub fn update(&self, user: &User) -> Result<UpdateResult, Error> {
         let User {
             first_name: _first_name,
@@ -126,7 +126,7 @@ impl UserService {
             .update_one(doc! { "email": email}, user_to_document(user), None)
     }
 
-    /// Delete existing user in mongo db
+    /// Delete existing user in mongo db (email)
     pub fn delete(&self, email: &String) -> Result<DeleteResult, Error> {
         self.collection.delete_one(doc! { "email": email}, None)
     }
