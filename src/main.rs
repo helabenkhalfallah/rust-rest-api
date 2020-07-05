@@ -1,5 +1,5 @@
-use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
+use actix_web::{middleware, App, HttpServer};
 use mongodb::{options::ClientOptions, Client};
 use std::env;
 use user_service::UserService;
