@@ -1,2 +1,2 @@
 # rust-rest-api
-Rust Rest Api using rocket and mongodb
+Rust Rest Api using actix and mongodb
