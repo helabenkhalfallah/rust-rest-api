@@ -1,8 +1,8 @@
 use actix_cors::Cors;
 use actix_web::{http, middleware, App, HttpServer};
-use dotenv::dotenv;
 use mongodb::{options::ClientOptions, Client};
 use std::env;
+use dotenv::dotenv;
 use user_service::UserService;
 
 mod user_router;
@@ -55,18 +55,19 @@ async fn main() -> std::io::Result<()> {
         let user_service_worker = UserService::new(user_collection.clone());
         let service_manager = ServiceManager::new(user_service_worker);
 
+        // cors
+        let cors_middleware = Cors::new()
+            .allowed_origin("*")
+            .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600)
+            .finish();
+
         // launch http server
         App::new()
             .wrap(middleware::Logger::default())
-            .wrap(
-                Cors::new()
-                    .allowed_origin("*")
-                    .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
-                    .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-                    .allowed_header(http::header::CONTENT_TYPE)
-                    .max_age(3600)
-                    .finish(),
-            )
+            .wrap(cors_middleware)
             // https://github.com/actix/examples/blob/8dab533b40d9d0640e5c75922c9e8e292ed4a7d5/sqlx_todo/src/main.rs#L41
             // pass database pool to application so we can access it inside handlers
             .data(AppState { service_manager })
